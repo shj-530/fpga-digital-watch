@@ -8,9 +8,9 @@ module up_down_counter #(
     input logic up,
     output logic [WIDTH-1:0] count
 );
-
+  // localparam constant for Max value with correct bit width
   localparam logic [WIDTH-1:0] Max = WIDTH'(MAX);
-
+  // Initial value of count is set to 0 with correct bit width
   initial count = WIDTH'(0);
   logic [WIDTH-1:0] next_count;
   always_ff @(posedge clk) if (enable) count <= next_count;
