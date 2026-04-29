@@ -40,7 +40,7 @@ module seven_segment #(
         4'he: segments_active_high = 7'b1111001;  // a,d,e,f,g
         4'hf: segments_active_high = 7'b1110001;  // a,e,f,g
       endcase
-    assign segments = ACTIVE_LOW != 0 ? ~segments_active_high : segments_active_high;
   end
+  assign segments = ACTIVE_LOW ? ~segments_active_high : segments_active_high;
 
 endmodule
