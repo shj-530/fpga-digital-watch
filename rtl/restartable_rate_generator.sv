@@ -1,14 +1,15 @@
 `timescale 1ns / 1ps
 module restartable_rate_generator #(
-    parameter int CYCLE_COUNT = 2
+    parameter int CYCLE_COUNT = 2  // clock cycles per tick
 ) (
-    input  logic clk,
-    input  logic run,
-    output logic tick
+    input  logic clk,  // system clock
+    input  logic run,  // when high, the generator runs
+    output logic tick  // single-cycle pulse every CYCLE_COUNT cycles
 );
-  logic tick_qualifier;
+  // Overall: produces a periodic tick that resets when run deasserts.
+  logic tick_qualifier;  // asserted when counter reaches terminal count
 
-  logic running = 1'b0;
+  logic running = 1'b0;  // delayed run to align tick with counter output
   always_ff @(posedge clk) running <= run;
   assign tick = running && tick_qualifier;
 

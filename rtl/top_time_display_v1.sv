@@ -1,24 +1,27 @@
 `timescale 1ns / 1ps
 module top_time_display_v1 #(
+    // System clock cycles per second (e.g., 50 MHz for DE1-SoC CLOCK_50).
     parameter int CYCLES_PER_SECOND = 50_000_000
 ) (
-    input logic CLOCK_50,
-    input logic [1:0] SW,
-    output logic [6:0] HEX0,
-    output logic [6:0] HEX1,
-    output logic [6:0] HEX2,
-    output logic [6:0] HEX3,
-    output logic [6:0] HEX4,
-    output logic [6:0] HEX5
+    input logic CLOCK_50,  // 50 MHz board clock input
+    input logic [1:0] SW,  // speed select: 00=1Hz, 01=25Hz, 10=1kHz, 11=full rate
+    output logic [6:0] HEX0,  // seven-seg: seconds ones
+    output logic [6:0] HEX1,  // seven-seg: seconds tens
+    output logic [6:0] HEX2,  // seven-seg: minutes ones
+    output logic [6:0] HEX3,  // seven-seg: minutes tens
+    output logic [6:0] HEX4,  // seven-seg: hours ones
+    output logic [6:0] HEX5  // seven-seg: hours tens
 );
 
-  localparam int Cycles1Hz = CYCLES_PER_SECOND;  //cycles= system frequency / desired frequency
-  localparam int Cycles25Hz = CYCLES_PER_SECOND / 25;
-  localparam int Cycles1KHz = CYCLES_PER_SECOND / 1_000;
-  logic [4:0] hours;
-  logic [5:0] minutes, seconds;
-  logic tick_1hz, tick_25hz, tick_1khz, hms_enable;
-  logic [3:0] second_one, second_ten, minute_one, minute_ten, hour_one, hour_ten;
+  // Overall: generate selectable tick rates, run an hours/minutes/seconds counter,
+  // convert to BCD digits, and drive six 7-seg displays.
+  localparam int Cycles1Hz = CYCLES_PER_SECOND;  // cycles = system frequency / desired frequency
+  localparam int Cycles25Hz = CYCLES_PER_SECOND / 25;  // cycles per 25 Hz tick
+  localparam int Cycles1KHz = CYCLES_PER_SECOND / 1_000;  // cycles per 1 kHz tick
+  logic [4:0] hours;  // hour count (0-23)
+  logic [5:0] minutes, seconds;  // minute/second counts (0-59)
+  logic tick_1hz, tick_25hz, tick_1khz, hms_enable;  // tick sources and selected enable
+  logic [3:0] second_one, second_ten, minute_one, minute_ten, hour_one, hour_ten;  // BCD digits
   hms_counter u_hms (
       .clk(CLOCK_50),
       .enable(hms_enable),

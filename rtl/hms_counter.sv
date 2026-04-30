@@ -1,28 +1,30 @@
 `timescale 1ns / 1ps
 module hms_counter #(
+    // Modulus for each time field.
     parameter int N_HOURS   = 24,
     parameter int N_MINUTES = 60,
     parameter int N_SECONDS = 60,
 
+    // Bit widths for each counter output.
     parameter int W_HOURS   = 5,
     parameter int W_MINUTES = 6,
     parameter int W_SECONDS = 6
 ) (
-    input logic clk,
-    input logic enable,
-    output logic [W_HOURS-1:0] hours,
-    output logic [W_MINUTES-1:0] minutes,
-    output logic [W_SECONDS-1:0] seconds
+    input logic clk,  // system clock
+    input logic enable,  // tick enable for seconds
+    output logic [W_HOURS-1:0] hours,  // hour count
+    output logic [W_MINUTES-1:0] minutes,  // minute count
+    output logic [W_SECONDS-1:0] seconds  // second count
 );
 
-  //rollover signals
-  logic second_rollover;
-  logic minute_rollover;
+  // Overall: cascaded counters for seconds, minutes, and hours.
+  logic second_rollover;  // asserted when seconds roll over
+  logic minute_rollover;  // asserted when minutes roll over
 
-  //adjust parameters
+  // Max values for rollover detection.
   localparam logic [W_MINUTES-1:0] MaxMinutes = W_MINUTES'(N_MINUTES - 1);
   localparam logic [W_SECONDS-1:0] MaxSeconds = W_SECONDS'(N_SECONDS - 1);
-  //rollover logic
+  // Rollover logic for cascading counters.
   assign second_rollover = enable && (seconds == MaxSeconds);
   assign minute_rollover = second_rollover && (minutes == MaxMinutes);
 

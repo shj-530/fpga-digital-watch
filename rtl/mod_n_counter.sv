@@ -1,16 +1,17 @@
 `timescale 1ns / 1ps
 module mod_n_counter #(
-    parameter int N = 4,
-    parameter int WIDTH = 2
+    parameter int N = 4,  // modulus of the counter
+    parameter int WIDTH = 2  // bit width of the count output
 ) (
-    input logic clk,
-    input logic rst,
-    input logic enable,
-    output logic [WIDTH-1:0] count
+    input logic clk,  // system clock
+    input logic rst,  // synchronous reset
+    input logic enable,  // enable counting when high
+    output logic [WIDTH-1:0] count  // current count value
 );
+  // Overall: counts 0..N-1 with synchronous reset and enable.
   localparam logic [WIDTH-1:0] Max = WIDTH'(N - 1);
   initial count = WIDTH'(0);
-  logic [WIDTH-1:0] next_count;
+  logic [WIDTH-1:0] next_count;  // next count value
   always_comb begin
     if (enable) begin
       if (count == Max) next_count = WIDTH'(0);
