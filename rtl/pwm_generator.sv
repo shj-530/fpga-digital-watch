@@ -10,9 +10,9 @@ module pwm_generator #(
     input logic rst,  // synchronous reset
     output logic pwm_out  // PWM output signal
 );
-  localparam int Width = $clog2(PERIOD_CYCLES);
+  localparam int Width = $clog2(PERIOD_CYCLES + 1);
   logic [Width-1:0] duty_cycle_count;  // current count of cycles in the PWM period
-  assign pwm_out = duty_cycle_count< DUTY_CYCLES?1'b1:1'b0;  // output high if count is less than duty cycles
+  assign pwm_out = duty_cycle_count < Width'(DUTY_CYCLES)?1'b1:1'b0;  // output high if count is less than duty cycles
   // Counter tracks the current cycle position in the PWM period.
   mod_n_counter #(
       .N(PERIOD_CYCLES),
