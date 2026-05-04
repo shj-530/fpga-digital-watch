@@ -116,8 +116,8 @@ module user_top_watch_v4 #(
   assign minutes_dec = minutes_edit && dec_pulse;
   assign hours_dec = hours_edit && dec_pulse;
 
-  assign minutes_tick = ((seconds == 6'd59) && seconds_tick) ? 1'b1 : 1'b0;
-  assign hours_tick = ((minutes == 6'd59) && (seconds == 6'd59) && minutes_tick) ? 1'b1 : 1'b0;
+  assign minutes_tick = ((seconds == 6'd59) && seconds_tick && !mode_enable[0]) ? 1'b1 : 1'b0;
+  assign hours_tick = ((minutes == 6'd59) && (seconds == 6'd59) && minutes_tick && !mode_enable[1]) ? 1'b1 : 1'b0;
   //Zero -extend counter values to display outputs
   assign hours_disp = {2'b0, hours};
   assign minutes_disp = {1'b0, minutes};
@@ -140,7 +140,7 @@ module user_top_watch_v4 #(
   );
   pwm_generator #(
       .PERIOD_CYCLES(CYCLES_PER_SECOND / 2),  // 2 Hz PWM for visible blinking
-      .DUTY_CYCLES(CYCLES_PER_SECOND / 2 * 0.2)  // 80% duty cycle
+      .DUTY_CYCLES(CYCLES_PER_SECOND / 2 * 1 / 5)  // 80% duty cycle
   ) u_pwm (
       .clk(clk),
       .rst(1'b0),
