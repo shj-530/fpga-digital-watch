@@ -9,9 +9,7 @@ module stopwatch_counter #(
     output logic [5:0] seconds,
     output logic [6:0] centiseconds
 );
-  logic enable_count;
   logic tick;
-  assign enable_count = enable && !rst && tick;
   cascade_counter #(
       .N2(100),
       .N1(60),
@@ -22,7 +20,7 @@ module stopwatch_counter #(
   ) u_cascade_counter (
       .clk(clk),
       .rst(rst),
-      .enable(enable_count),
+      .enable(tick && enable),
       .count2(minutes),
       .count1(seconds),
       .count0(centiseconds)

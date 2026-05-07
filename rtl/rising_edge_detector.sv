@@ -5,7 +5,7 @@ module rising_edge_detector (
     input logic sig_in,  // input signal to detect rising edge on
     output logic rise  //asserted immediately when sig_in transitions from 0 to 1, otherwise 0
 );
-  logic prev_rise;  // prev_rise tracks the previous value of sig_in to detect rising edges.
+  logic prev_rise = 1'b0;  // prev_rise tracks the previous value of sig_in to detect rising edges.
   assign rise = sig_in && !prev_rise;  // rise is high if sig_in is high and it was not high in the previous cycle
   always_ff @(posedge clk) begin
     prev_rise <= sig_in;  // update the previous value of sig_in

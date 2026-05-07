@@ -9,7 +9,7 @@ module restartable_rate_generator #(
   // Overall: produces a periodic tick that resets when run deasserts.
   logic tick_qualifier;  // asserted when counter reaches terminal count
 
-  logic running = 1'b0;  // delayed run to align tick with counter output
+  logic running;  // delayed run to align tick with counter output
   always_ff @(posedge clk) running <= run;
   assign tick = running && tick_qualifier;
 

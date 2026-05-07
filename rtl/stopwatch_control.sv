@@ -27,7 +27,6 @@ module stopwatch_control (
   // Assert reset only if stopped AND display is live
   assign next_counter_rst = only_lap && !counter_enable && !lap_hold;
 
-  // BLOCK 3 (always_comb): lap_hold logic
   always_comb begin
     next_lap_hold = lap_hold;  // Default: keep state
     if (only_lap) begin
@@ -39,7 +38,6 @@ module stopwatch_control (
     end
   end
 
-  // SEQUENTIAL BLOCK: Memory[cite: 1]
   always_ff @(posedge clk) begin
     counter_rst    <= next_counter_rst;
     counter_enable <= next_counter_enable;
