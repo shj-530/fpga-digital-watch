@@ -16,9 +16,10 @@ module stopwatch_control (
   logic next_counter_rst, next_counter_enable, next_lap_hold;
 
   // Rule: Simultaneous presses are ignored
-  logic ignore = rise_start_stop && rise_lap;
-  logic only_ss = rise_start_stop && !ignore;
-  logic only_lap = rise_lap && !ignore;
+  logic ignore, only_ss, only_lap;
+  assign ignore = rise_start_stop && rise_lap;
+  assign only_ss = rise_start_stop && !ignore;
+  assign only_lap = rise_lap && !ignore;
 
   // BLOCK 1 (Assign): counter_enable toggle
   assign next_counter_enable = only_ss ? !counter_enable : counter_enable;

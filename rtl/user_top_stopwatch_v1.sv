@@ -17,7 +17,7 @@ module user_top_stopwatch_v1 #(
     output logic blank_seconds
 );
   logic rise_ss, rise_lap;
-  logic stop_rst, stop_en, stop_hold;
+  logic stop_rst, counter_enable, lap_hold;
 
   logic [6:0] count_mins, count_cents;
   logic [ 5:0] count_secs;
@@ -40,15 +40,15 @@ module user_top_stopwatch_v1 #(
       .rise_start_stop(rise_ss),
       .rise_lap(rise_lap),
       .counter_rst(stop_rst),
-      .counter_enable(stop_en),
-      .lap_hold(stop_hold)
+      .counter_enable(counter_enable),
+      .lap_hold(lap_hold)
   );
   stopwatch_counter #(
       .CYCLES_PER_SECOND(CYCLES_PER_SECOND)
   ) u_counter (
       .clk(clk),
       .rst(stop_rst),
-      .enable(stop_en),
+      .enable(counter_enable),
       .minutes(count_mins),
       .seconds(count_secs),
       .centiseconds(count_cents)
@@ -58,7 +58,7 @@ module user_top_stopwatch_v1 #(
       .WIDTH(20)
   ) u_mux (
       .clk(clk),
-      .hold(stop_hold),
+      .hold(lap_hold),
       .d(live_time),
       .q(new_time)
   );
